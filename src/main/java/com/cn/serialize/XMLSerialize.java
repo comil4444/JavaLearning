@@ -9,21 +9,26 @@ import java.io.UnsupportedEncodingException;
 public class XMLSerialize implements  ISerialize {
 
     private final static String DEFALUT_CHARSET = "UTF-8";
+    static XStream xStream = new XStream(new DomDriver(DEFALUT_CHARSET));
+    static{
+        XStream.setupDefaultSecurity(xStream);
+    }
 
     @Override
     public <T> byte[] serialize(T t) {
-        XStream xStream = new XStream(new DomDriver(DEFALUT_CHARSET));
+        xStream.allowTypes(new Class[]{t.getClass()});
         try {
             return xStream.toXML(t).getBytes(DEFALUT_CHARSET);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         return null;
+
     }
 
     @Override
-    public <T> T deseralize(byte[] data, Class<T> tClass) {
-        XStream xStream = new XStream(new DomDriver(DEFALUT_CHARSET));
+    public <T> T deserialize(byte[] data, Class<T> tClass) {
+        xStream.allowTypes(new Class[]{tClass});
         xStream.processAnnotations(tClass);
         return (T)xStream.fromXML(new ByteArrayInputStream(data));
     }

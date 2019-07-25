@@ -1,27 +1,33 @@
 package com.cn.serialize;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 public class JDKSerialize implements ISerialize{
 
     @Override
     public <T> byte[] serialize(T t) {
         try{
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(new ByteArrayOutputStream());
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
             objectOutputStream.writeObject(t);
+            objectOutputStream.flush();
+            return byteArrayOutputStream.toByteArray();
         }catch (Exception e){
-
+            e.printStackTrace();
         }
-
-
         return new byte[0];
     }
 
     @Override
-    public <T> T deseralize(byte[] data, Class<T> tClass) {
+    public <T> T deserialize(byte[] data, Class<T> tClass) {
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
+        try {
+            ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+            return (T)objectInputStream.readObject();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 }
