@@ -51,28 +51,33 @@ public class NIOServer {
                 iterator.remove();
                 //第一个业务搞定了，再去排队做第二个业务
                 if(selectionKey.isAcceptable()){
+                    System.out.println("accept!");
                     ServerSocketChannel serverSocketChannel = (ServerSocketChannel)selectionKey.channel();
                     SocketChannel socketChannel = serverSocketChannel.accept();
                     socketChannel.configureBlocking(false);
-                    socketChannel.register(selector, SelectionKey.OP_READ);
+                    socketChannel.register(selectionKey.selector(), SelectionKey.OP_READ);
                 //第二个业务搞定，再去排队第三个业务
                 }else if(selectionKey.isReadable()){
+                    System.out.println("read!");
                     SocketChannel channel = (SocketChannel)selectionKey.channel();
                     int len = channel.read(buffer);
                     if(len > 0){
                         buffer.flip();
                         String data = new String(buffer.array(),0 ,len);
                         System.out.println("content:\t" + data);
-                        selectionKey.attach(data);
+                        channel.register(selectionKey.selector(), SelectionKey.OP_WRITE, data);
+                    }else{
+                        channel.close();
                     }
-                    channel.register(selector, SelectionKey.OP_WRITE);
+                    buffer.clear();
 
                 //第三个业务结束，可以走了。
                 }else if(selectionKey.isWritable()){
+                    System.out.println("write!");
                     SocketChannel channel = (SocketChannel)selectionKey.channel();
                     String data = (String) selectionKey.attachment();
                     channel.write(ByteBuffer.wrap(("output data:\t" + data).getBytes()));
-                    channel.close();
+                    channel.register(selectionKey.selector(), SelectionKey.OP_READ);
                 }
             }
 
