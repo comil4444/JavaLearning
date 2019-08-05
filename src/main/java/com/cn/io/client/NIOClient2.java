@@ -5,6 +5,7 @@ import com.cn.io.Constants;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.ClosedSelectorException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
@@ -46,6 +47,11 @@ public class NIOClient2 {
         while(true){
             Scanner scanner = new Scanner(System.in);
             String data = scanner.nextLine();
+            if(data.equals("bye")){
+                clientChannel.close();
+                clientSelector.close();
+                return;
+            }
             byteBuffer.put(data.getBytes());
             byteBuffer.flip();
             this.clientChannel.write(byteBuffer);
@@ -90,8 +96,12 @@ public class NIOClient2 {
                         }
                     }
                 }
-            }catch (Exception e){
+            }catch (ClosedSelectorException ce){
+                return;
+            }
+            catch (Exception e){
                 e.printStackTrace();
+
             }
         }
     }
