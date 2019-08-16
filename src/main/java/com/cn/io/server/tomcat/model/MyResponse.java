@@ -1,10 +1,13 @@
 package com.cn.io.server.tomcat.model;
 
+import lombok.NoArgsConstructor;
+
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
+@NoArgsConstructor
 public class MyResponse {
 
     private OutputStream outputStream;
