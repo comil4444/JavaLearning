@@ -29,4 +29,11 @@ public class TimeServerHandler extends ChannelInboundHandlerAdapter {
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
         ctx.flush();
     }
+
+    public static void main(String[] args) {
+        System.out.println(1);
+        String a = "aaaaaa";
+        String b = new String("aaaaaa");
+        System.out.println(1);
+    }
 }
