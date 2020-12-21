@@ -3,24 +3,22 @@ package com.cn.sort;
 public class ShellSort implements ISort{
     @Override
     public void sort(int[] arr) {
-        int length = arr.length;
-        int h = 1;
-        while(h < length/3){
-            //h的取值遵循等差数列：1,4,13,40,121,364...
-            //并且h最终定能取1
-            h = 3*h + 1;
-        }
-        while(h >= 1){
-            for (int i = h; i < length; i++) {
-                for (int j = i; j >= h; j -= h) {//h有序子序列
-                    if (arr[j] < arr[j-h]) {
-                        swap(arr, j, j-h);
-                    }else{
-                        break;
+        if (arr != null && arr.length != 0 ) {
+            int increment = arr.length;
+            do {
+                increment = increment/3 + 1;
+
+                for (int i = 0; i < increment; i++) {
+                    for (int j = i + increment; j < arr.length; j+=increment) {
+                        int temp = arr[j];
+                        int k = j - increment;
+                        for (; k >= 0 && arr[k] > temp; k-=increment) {
+                            arr[k + increment] = arr[k];
+                        }
+                        arr[k+increment] = temp;
                     }
                 }
-            }
-            h = h/3;
+            } while (increment > 1);
         }
     }
 }
