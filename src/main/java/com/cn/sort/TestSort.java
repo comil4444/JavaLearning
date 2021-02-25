@@ -7,7 +7,7 @@ public class TestSort {
         int[] numbers = NumberGenerator.generateRandomNumbers(50, 100);
         System.out.println(Arrays.toString(numbers));
 
-        new InsertSort().sort(numbers);
+        new InsertSortV2().sort(numbers);
         System.out.println(Arrays.toString(numbers));
     }
 }
