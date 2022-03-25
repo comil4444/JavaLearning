@@ -33,6 +33,16 @@ public class QuickSort implements ISort{
             swap(arr, left, l);
         }
 
+
         return l;
+    }
+
+
+    public static void main(String[] args) {
+        double k = (double)1/3;
+        double k1 = 2/6;
+        System.out.println(k == k1);
+        System.out.println(k);
+        System.out.println(k * 6 == 2);
     }
 }

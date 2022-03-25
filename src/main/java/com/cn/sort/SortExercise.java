@@ -1,36 +1,36 @@
 package com.cn.sort;
 
-public class SortExercise implements ISort{
+import java.util.Arrays;
 
+public class SortExercise {
 
-    @Override
-    public void sort(int[] arr) {
-        if (arr == null || arr.length == 0) {
-            return;
-        }
-        quickSortInternal(arr, 0, arr.length - 1);
+    public static void main(String[] args) {
+        int[] arr = NumberGenerator.generateRandomNumbers(30, 100);
+        System.out.println(Arrays.toString(arr));
+        bubbleSort(Arrays.copyOf(arr, arr.length));
+        selectionSort(Arrays.copyOf(arr, arr.length));
+        insertSort(Arrays.copyOf(arr, arr.length));
+        quickSort(Arrays.copyOf(arr, arr.length));
     }
 
+    public static void quickSort(int[] arr) {
+        doQuickSort(arr, 0, arr.length - 1);
+    }
 
-
-
-
-    private void quickSortInternal(int[] arr, int left, int right) {
+    private static void doQuickSort(int[] arr, int left, int right) {
         if (left < right) {
-            int partition = partition(arr, left, right);
-            quickSortInternal(arr, left, partition - 1);
-            quickSortInternal(arr, partition, right);
+            int index = findIndex(arr, left, right);
+            doQuickSort(arr, left, index - 1);
+            doQuickSort(arr, index, right);
         }
     }
 
-    private int partition(int[] arr, int left, int right) {
+    private static int findIndex(int[] arr, int left, int right) {
         int flag = arr[left];
-        int l = left;
-        int r = right;
-
+        int l = left, r = right;
         while (l < r) {
-            while (l < r && arr[l] <= flag) l++;
-            while (l < r && arr[r] >= flag) r--;
+            while (arr[l] <= flag && l < r) l++;
+            while (arr[r] >= flag && l < r) r--;
             if (l < r) {
                 swap(arr, l, r);
                 l++;
@@ -38,11 +38,61 @@ public class SortExercise implements ISort{
             }
         }
 
-        if (arr[left] >= arr[l]) {
-            swap(arr, left, l);
+        if (arr[l] < flag) {
+            swap(arr, l, left);
+        }
+        return l;
+    }
+
+    public static void bubbleSort(int[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = i + 1; j < arr.length; j++) {
+                if (arr[i] > arr[j]) {
+                    swap(arr, i, j);
+                }
+            }
         }
 
-        return l;
-
+        System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName() + "\t" + Arrays.toString(arr));
     }
+
+    public static void insertSort(int[] arr) {
+        for (int i = 1; i < arr.length; i++) {
+            int current = arr[i];
+            int j = i - 1;
+            if (current < arr[j]) {
+                for (; j >= 0 && arr[j] > current ; j--) {
+                    arr[j + 1] = arr[j];
+                }
+                arr[j + 1] = current;
+            }
+        }
+        System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName() + "\t" + Arrays.toString(arr));
+    }
+
+    public static void selectionSort(int[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            int minIndex = i;
+            for (int j = minIndex + 1; j < arr.length; j++) {
+                if (arr[j] < arr[minIndex]) {
+                    minIndex = j;
+                }
+            }
+            swap(arr, minIndex, i);
+        }
+        System.out.println(Thread.currentThread().getStackTrace()[1].getMethodName() + "\t" + Arrays.toString(arr));
+    }
+
+    public static void swap(int[] arr, int left, int right) {
+        int temp = arr[left];
+        arr[left] = arr[right];
+        arr[right] = temp;
+    }
+
+
+
+
+
+
+
 }
